@@ -65,7 +65,7 @@ export default function Home() {
     (value: string) => {
       const words = parseStringToSentence(value);
 
-      dispatch({ type: 'SET_SENTENCE', sentence: words });
+      dispatch({ type: 'SET_SENTENCE', sentence: words, rawSentence: value });
     },
     [dispatch],
   );
@@ -148,11 +148,9 @@ export default function Home() {
       .filter((word) => word.selected)
       .map((word) => word.value);
 
-    const stringifiedSentence = sentence.map((word) => word.value).join(' ');
-
     Promise.all(
       selectedWords.map((word) =>
-        createWord({ word, sentence: stringifiedSentence }),
+        createWord({ word, sentence: state.rawSentence }),
       ),
     )
       .then(() => {

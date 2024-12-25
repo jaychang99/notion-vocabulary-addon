@@ -3,6 +3,7 @@ import { useReducer } from 'react';
 
 interface State {
   sentence: Sentence;
+  rawSentence: string;
 }
 
 type Action =
@@ -13,6 +14,7 @@ type Action =
   | {
       type: 'SET_SENTENCE';
       sentence: Sentence;
+      rawSentence: string;
     }
   | {
       type: 'SET_PHRASE';
@@ -34,6 +36,7 @@ const reducer = (state: State, action: Action) => {
     case 'SET_SENTENCE':
       return {
         ...state,
+        rawSentence: action.rawSentence,
         sentence: action.sentence,
       };
     case 'SET_PHRASE':
@@ -93,6 +96,7 @@ const reducer = (state: State, action: Action) => {
     case 'RESET_SENTENCE':
       return {
         ...state,
+        rawSentence: '',
         sentence: [],
       };
     default:
@@ -101,5 +105,5 @@ const reducer = (state: State, action: Action) => {
 };
 
 export const useSetWordState = () => {
-  return useReducer(reducer, { sentence: [] });
+  return useReducer(reducer, { sentence: [], rawSentence: '' });
 };
