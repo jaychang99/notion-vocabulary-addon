@@ -2,7 +2,7 @@ import { Sentence } from '@/types/sentence';
 
 export const parseStringToSentence = (value: string): Sentence => {
   const punctuationRemovedSentence = value.replace(
-    /[.,\/#!$%\^&\*;:=\`~]/g,
+    /[.,\/#!$%\^&\*;:='"\`~]/g,
     '',
   );
 
