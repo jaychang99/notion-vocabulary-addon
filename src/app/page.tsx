@@ -1,6 +1,7 @@
 'use client';
 
 import Button from '@/components/Button';
+import PasteFromClipboardButton from '@/components/PasteFromClipboardButton';
 import ProgressBar from '@/components/ProgressBar';
 import SelectedWordViewer from '@/components/SelectedWordViewer';
 import Spin from '@/components/Spin';
@@ -167,13 +168,14 @@ export default function Home() {
   useEffect(() => {
     // whenever window is focused, paste from clipboard the sentence.
     const pasteFromCilpboard = () => {
-      navigator.clipboard
-        .readText()
+      navigator?.clipboard
+        ?.readText()
         .then((text) => {
           handleChangeSentence(text);
         })
-        .catch(() => {
+        .catch((err) => {
           //noop
+          console.log(err);
         });
     };
 
@@ -201,6 +203,11 @@ export default function Home() {
       <WordSelector sentence={sentence} onSelectWord={handleSelectWord} />
       <div className="h-10" />
       <SelectedWordViewer words={selectedWords} />
+      {sentence.length <= 1 && (
+        <PasteFromClipboardButton
+          onPaste={(text) => handleChangeSentence(text)}
+        />
+      )}
       <div className="h-10" />
       <Button
         isLoading={isLoading}
