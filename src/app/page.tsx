@@ -57,6 +57,7 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center justify-center w-screen h-screen">
       <Textarea
+        value={sentence.map((word) => word.value).join(' ')}
         onChange={handleChangeSentence}
         placeholder="Type a sentence..."
       />
