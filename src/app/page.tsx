@@ -8,7 +8,7 @@ import WordSelector from '@/components/WordSelector';
 import { useSubmitWords } from '@/hooks/useSubmitWords';
 import { Sentence } from '@/types/sentence';
 import { parseStringToSentence } from '@/utils/parseStringToSentence';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const [sentence, setSentence] = useState<Sentence>([]);
@@ -50,6 +50,28 @@ export default function Home() {
       setSentence([]);
     });
   };
+
+  useEffect(() => {
+    // whenever window is focused, paste from clipboard the sentence.
+    const pasteFromCilpboard = () => {
+      try {
+        navigator.clipboard.readText().then((text) => {
+          handleChangeSentence(text);
+        });
+      } catch {
+        // no-op
+      }
+    };
+
+    // initally paste from clipboard
+    pasteFromCilpboard();
+
+    window.addEventListener('focus', pasteFromCilpboard);
+
+    return () => {
+      window.removeEventListener('focus', pasteFromCilpboard);
+    };
+  }, []);
 
   return (
     <main className="flex flex-col items-center justify-center w-screen h-screen">
