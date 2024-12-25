@@ -167,13 +167,14 @@ export default function Home() {
   useEffect(() => {
     // whenever window is focused, paste from clipboard the sentence.
     const pasteFromCilpboard = () => {
-      try {
-        navigator.clipboard.readText().then((text) => {
+      navigator.clipboard
+        .readText()
+        .then((text) => {
           handleChangeSentence(text);
+        })
+        .catch(() => {
+          //noop
         });
-      } catch {
-        // no-op
-      }
     };
 
     // initally paste from clipboard
