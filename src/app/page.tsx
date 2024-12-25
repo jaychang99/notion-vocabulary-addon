@@ -208,6 +208,16 @@ export default function Home() {
           onPaste={(text) => handleChangeSentence(text)}
         />
       )}
+      {selectedWords.length === 0 && sentence.length > 0 && (
+        <button
+          onClick={() => {
+            dispatch({ type: 'RESET_SENTENCE' });
+          }}
+          className="bg-red-500 text-white font-bold p-5 mt-4"
+        >
+          Clear Sentence
+        </button>
+      )}
       <div className="h-10" />
       <Button
         isLoading={isLoading}
