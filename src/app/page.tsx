@@ -203,7 +203,7 @@ export default function Home() {
       <WordSelector sentence={sentence} onSelectWord={handleSelectWord} />
       <div className="h-10" />
       <SelectedWordViewer words={selectedWords} />
-      {sentence.length <= 1 && (
+      {sentence.length === 0 && (
         <PasteFromClipboardButton
           onPaste={(text) => handleChangeSentence(text)}
         />
@@ -213,9 +213,19 @@ export default function Home() {
           onClick={() => {
             dispatch({ type: 'RESET_SENTENCE' });
           }}
-          className="bg-red-500 text-white font-bold p-5 mt-4"
+          className="border-solid border-2 rounded-md border-red-500 text-red-500 font-bold p-2 mt-4 self-start"
         >
           Clear Sentence
+        </button>
+      )}
+      {selectedWords.length >= 1 && (
+        <button
+          onClick={() => {
+            dispatch({ type: 'DESELECT_ALL_WORDS' });
+          }}
+          className="border-solid border-2 rounded-md border-orange-500 text-orange-500 font-bold p-2 mt-4 self-start"
+        >
+          Deselect All
         </button>
       )}
       <div className="h-10" />

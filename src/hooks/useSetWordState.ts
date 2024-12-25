@@ -23,6 +23,9 @@ type Action =
     }
   | {
       type: 'RESET_SENTENCE';
+    }
+  | {
+      type: 'DESELECT_ALL_WORDS';
     };
 type WordActionTypes =
   | 'MARK_WORD_AS_SELECTED'
@@ -98,6 +101,16 @@ const reducer = (state: State, action: Action) => {
         ...state,
         rawSentence: '',
         sentence: [],
+      };
+    case 'DESELECT_ALL_WORDS':
+      return {
+        ...state,
+        sentence: state.sentence.map((word) => ({
+          ...word,
+          selected: false,
+          isOpenForPhraseSelectionMode: false,
+          phraseId: undefined,
+        })),
       };
     default:
       return state;
