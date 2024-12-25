@@ -14,7 +14,11 @@ const Word = ({ word, onSelectWord }: Props) => {
     <button
       className={`p-2 m-1 border-2 ${
         shouldDim ? 'text-gray-500' : 'text-gray-100'
-      } rounded-md ${word.selected ? 'bg-white text-gray-900' : ''}
+      } rounded-md ${
+        word.selected && !word.isOpenForPhraseSelectionMode
+          ? 'bg-white text-gray-900'
+          : ''
+      }
       ${shouldDim ? 'border-gray-500' : ''}
       ${word.isOpenForPhraseSelectionMode ? 'bg-green-500 text-white' : ''}
       ${
