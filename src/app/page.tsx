@@ -93,17 +93,18 @@ export default function Home() {
         onClick={handleSubmit}
         disabled={isSubmitDisabled}
         className={`
-          fixed bottom-0 left-0 right-0 font-bold text-xl p-4
+          fixed bottom-4 left-0 right-0 font-bold text-xl p-4
           `}
       >
         {isSubmitDisabled ? 'Select words to submit' : 'Submit'}
       </Button>
-      {createWordsCount > 0 && (
+      {/* {createWordsCount > 0 && (
         <ProgressBar
           totalCount={selectedWords.length}
           completedCount={createWordsCount}
         />
-      )}
+      )} */}
+      <ProgressBar totalCount={5} completedCount={3} />
       <div className="h-20" />
     </main>
   );
