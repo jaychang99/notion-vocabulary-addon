@@ -144,9 +144,6 @@ export default function Home() {
 
   const handleSubmit = () => {
     setIsLoading(true);
-    const selectedWords = sentence
-      .filter((word) => word.selected)
-      .map((word) => word.value);
 
     Promise.all(
       selectedWords.map((word) =>
