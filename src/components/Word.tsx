@@ -4,9 +4,10 @@ import { Sentence } from '@/types/sentence';
 interface Props {
   word: Sentence[number];
   onSelectWord: (word: Sentence[number]) => void;
+  isPartOfPhrase: boolean;
 }
 
-const Word = ({ word, onSelectWord }: Props) => {
+const Word = ({ word, onSelectWord, isPartOfPhrase }: Props) => {
   const wordLength = word.value.length;
   const shouldDim = wordLength < KEYWORD_LENGTH_THRESHOLD;
 
@@ -15,14 +16,14 @@ const Word = ({ word, onSelectWord }: Props) => {
       className={`p-2 m-1 border-2 ${
         shouldDim ? 'text-gray-500' : 'text-gray-100'
       } rounded-md ${
-        word.selected && !word.isOpenForPhraseSelectionMode
+        (word.selected && !word.isOpenForPhraseSelectionMode) || isPartOfPhrase
           ? 'bg-white text-gray-900'
           : ''
       }
       ${shouldDim ? 'border-gray-500' : ''}
       ${word.isOpenForPhraseSelectionMode ? 'bg-green-500 text-white' : ''}
       ${
-        word.phraseId
+        isPartOfPhrase
           ? 'border-dashed border-2 border-gray-700'
           : 'border-solid border-2'
       }
