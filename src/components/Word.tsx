@@ -2,7 +2,7 @@ import { Sentence } from '@/types/sentence';
 
 interface Props {
   word: Sentence[number];
-  onSelectWord: (id: number) => void;
+  onSelectWord: (id: string) => void;
 }
 
 const Word = ({ word, onSelectWord }: Props) => {

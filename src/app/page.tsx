@@ -7,6 +7,7 @@ import Textarea from '@/components/Textarea';
 import WordSelector from '@/components/WordSelector';
 import { useSubmitWords } from '@/hooks/useSubmitWords';
 import { Sentence } from '@/types/sentence';
+import { parseStringToSentence } from '@/utils/parseStringToSentence';
 import { useState } from 'react';
 
 export default function Home() {
@@ -20,16 +21,12 @@ export default function Home() {
     .map((word) => word.value);
 
   const handleChangeSentence = (value: string) => {
-    const words = value.split(' ').map((word, index) => ({
-      id: index,
-      value: word,
-      selected: false,
-    }));
+    const words = parseStringToSentence(value);
 
     setSentence(words);
   };
 
-  const handleSelectWord = (id: number) => {
+  const handleSelectWord = (id: string) => {
     setSentence((prev) =>
       prev.map((word) =>
         word.id === id ? { ...word, selected: !word.selected } : word,

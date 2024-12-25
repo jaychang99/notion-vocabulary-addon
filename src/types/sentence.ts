@@ -1,7 +1,7 @@
 export type Sentence = Word[];
 
 interface Word {
-  id: number;
+  id: string;
   value: string;
   selected: boolean;
 }
