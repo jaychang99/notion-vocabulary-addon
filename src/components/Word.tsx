@@ -1,3 +1,4 @@
+import { KEYWORD_LENGTH_THRESHOLD } from '@/constants/config';
 import { Sentence } from '@/types/sentence';
 
 interface Props {
@@ -6,11 +7,16 @@ interface Props {
 }
 
 const Word = ({ word, onSelectWord }: Props) => {
+  const wordLength = word.value.length;
+  const shouldDim = wordLength < KEYWORD_LENGTH_THRESHOLD;
+
   return (
     <button
-      className={`p-2 m-1 border-2 border-gray-300 rounded-md ${
-        word.selected ? 'bg-blue-800' : ''
-      }`}
+      className={`p-2 m-1 border-2 ${
+        shouldDim ? 'text-gray-500' : 'text-gray-100'
+      } rounded-md ${word.selected ? 'bg-blue-800' : ''}
+      ${shouldDim ? 'border-gray-500' : ''}
+      `}
       onClick={() => onSelectWord(word.id)}
     >
       {word.value}
