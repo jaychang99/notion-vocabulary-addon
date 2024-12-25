@@ -3,6 +3,7 @@
 import Button from '@/components/Button';
 import ProgressBar from '@/components/ProgressBar';
 import SelectedWordViewer from '@/components/SelectedWordViewer';
+import Spin from '@/components/Spin';
 import Textarea from '@/components/Textarea';
 import WordSelector from '@/components/WordSelector';
 import { useSubmitWords } from '@/hooks/useSubmitWords';
@@ -12,6 +13,7 @@ import { useEffect, useState } from 'react';
 
 export default function Home() {
   const [sentence, setSentence] = useState<Sentence>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { createWord, createWordsCount, resetCreatedWordsCount } =
     useSubmitWords();
@@ -37,20 +39,28 @@ export default function Home() {
   };
 
   const handleSubmit = () => {
+    setIsLoading(true);
     const selectedWords = sentence
       .filter((word) => word.selected)
       .map((word) => word.value);
 
     const stringifiedSentence = sentence.map((word) => word.value).join(' ');
 
-    Promise.allSettled(
+    Promise.all(
       selectedWords.map((word) =>
         createWord({ word, sentence: stringifiedSentence }),
       ),
-    ).then(() => {
-      resetCreatedWordsCount();
-      setSentence([]);
-    });
+    )
+      .then(() => {
+        resetCreatedWordsCount();
+        setSentence([]);
+      })
+      .catch(() => {
+        alert('Failed to create word');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -90,13 +100,22 @@ export default function Home() {
       <SelectedWordViewer words={selectedWords} />
       <div className="h-10" />
       <Button
+        isLoading={isLoading}
         onClick={handleSubmit}
-        disabled={isSubmitDisabled}
+        disabled={isSubmitDisabled || isLoading}
         className={`
           fixed bottom-4 left-0 right-0 font-bold text-xl p-4
           `}
       >
-        {isSubmitDisabled ? 'Select words to submit' : 'Submit'}
+        {isLoading ? (
+          <div className="flex items-center justify-center">
+            <Spin />
+          </div>
+        ) : isSubmitDisabled ? (
+          'Select words to submit'
+        ) : (
+          'Submit'
+        )}
       </Button>
       {createWordsCount > 0 && (
         <ProgressBar
