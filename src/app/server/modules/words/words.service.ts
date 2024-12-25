@@ -6,6 +6,11 @@ import { CreateWordDto } from '@/app/server/modules/words/create-word.dto';
 interface Props extends CreateWordDto {}
 
 export async function createWord({ word, sentence }: Props) {
+  // find the word in the sentence and break apart the sentence into three parts
+  const wordIndex = sentence.indexOf(word);
+  const partBeforeWord = sentence.slice(0, wordIndex);
+  const partAfterWord = sentence.slice(wordIndex + word.length);
+
   return await notionClient.pages.create({
     parent: {
       type: 'database_id',
@@ -25,7 +30,21 @@ export async function createWord({ word, sentence }: Props) {
         rich_text: [
           {
             text: {
-              content: sentence,
+              content: partBeforeWord,
+            },
+          },
+          {
+            text: {
+              content: word,
+            },
+            annotations: {
+              bold: true,
+              underline: true,
+            },
+          },
+          {
+            text: {
+              content: partAfterWord,
             },
           },
         ],
