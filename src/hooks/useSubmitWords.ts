@@ -17,7 +17,7 @@ export const useSubmitWords = () => {
     if (response.ok) {
       setCreatedWordsCount((prev) => prev + 1);
     } else {
-      console.error('Failed to create word');
+      throw new Error('Response Failed');
     }
   };
 
