@@ -11,6 +11,7 @@ import { useSubmitWords } from '@/hooks/useSubmitWords';
 import { Sentence } from '@/types/sentence';
 import { parseStringToSentence } from '@/utils/parseStringToSentence';
 import { useCallback, useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 const chunkWordsWithPhraseId = (sentence: Sentence): string[] => {
   const result: string[] = [];
@@ -151,11 +152,12 @@ export default function Home() {
       ),
     )
       .then(() => {
+        toast.success('Successfully created!');
         resetCreatedWordsCount();
         dispatch({ type: 'RESET_SENTENCE' });
       })
       .catch(() => {
-        alert('Failed to create word');
+        toast.error('Failed to create word');
       })
       .finally(() => {
         setIsLoading(false);
@@ -186,6 +188,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col">
+      <Toaster />
       {/* <div className="h-5" /> */}
       {/* <h1 className="text-4xl font-bold text-center">Register Words</h1> */}
       <div className="h-10" />
