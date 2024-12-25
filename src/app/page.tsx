@@ -20,6 +20,8 @@ export default function Home() {
     .filter((word) => word.selected)
     .map((word) => word.value);
 
+  const isSubmitDisabled = selectedWords.length === 0;
+
   const handleChangeSentence = (value: string) => {
     const words = parseStringToSentence(value);
 
@@ -75,8 +77,8 @@ export default function Home() {
 
   return (
     <main className="flex flex-col">
-      <div className="h-5" />
-      <h1 className="text-4xl font-bold text-center">Register Words</h1>
+      {/* <div className="h-5" /> */}
+      {/* <h1 className="text-4xl font-bold text-center">Register Words</h1> */}
       <div className="h-10" />
       <Textarea
         value={sentence.map((word) => word.value).join(' ')}
@@ -87,8 +89,14 @@ export default function Home() {
       <div className="h-10" />
       <SelectedWordViewer words={selectedWords} />
       <div className="h-10" />
-      <Button onClick={handleSubmit} disabled={selectedWords.length === 0}>
-        Submit
+      <Button
+        onClick={handleSubmit}
+        disabled={isSubmitDisabled}
+        className={`
+          fixed bottom-0 left-0 right-0 font-bold text-xl p-4
+          `}
+      >
+        {isSubmitDisabled ? 'Select words to submit' : 'Submit'}
       </Button>
       {createWordsCount > 0 && (
         <ProgressBar
@@ -96,6 +104,7 @@ export default function Home() {
           completedCount={createWordsCount}
         />
       )}
+      <div className="h-20" />
     </main>
   );
 }
