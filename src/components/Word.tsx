@@ -3,7 +3,7 @@ import { Sentence } from '@/types/sentence';
 
 interface Props {
   word: Sentence[number];
-  onSelectWord: (id: string) => void;
+  onSelectWord: (word: Sentence[number]) => void;
 }
 
 const Word = ({ word, onSelectWord }: Props) => {
@@ -16,8 +16,14 @@ const Word = ({ word, onSelectWord }: Props) => {
         shouldDim ? 'text-gray-500' : 'text-gray-100'
       } rounded-md ${word.selected ? 'bg-white text-gray-900' : ''}
       ${shouldDim ? 'border-gray-500' : ''}
+      ${word.isOpenForPhraseSelectionMode ? 'bg-green-500 text-white' : ''}
+      ${
+        word.phraseId
+          ? 'border-dashed border-2 border-gray-700'
+          : 'border-solid border-2'
+      }
       `}
-      onClick={() => onSelectWord(word.id)}
+      onClick={() => onSelectWord(word)}
     >
       {word.value}
     </button>

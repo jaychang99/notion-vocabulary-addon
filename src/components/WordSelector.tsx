@@ -3,7 +3,7 @@ import { Sentence } from '@/types/sentence';
 
 interface Props {
   sentence: Sentence;
-  onSelectWord: (id: string) => void;
+  onSelectWord: (word: Sentence[number]) => void;
 }
 
 const WordSelector = ({ sentence, onSelectWord }: Props) => {

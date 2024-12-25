@@ -6,36 +6,140 @@ import SelectedWordViewer from '@/components/SelectedWordViewer';
 import Spin from '@/components/Spin';
 import Textarea from '@/components/Textarea';
 import WordSelector from '@/components/WordSelector';
+import { useSetWordState } from '@/hooks/useSetWordState';
 import { useSubmitWords } from '@/hooks/useSubmitWords';
 import { Sentence } from '@/types/sentence';
 import { parseStringToSentence } from '@/utils/parseStringToSentence';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
+const chunkWordsWithPhraseId = (sentence: Sentence): string[] => {
+  const result: string[] = [];
+
+  let isCheckingPhrase = false;
+
+  sentence.forEach((word) => {
+    if (word.selected && !word.phraseId) {
+      // if selected but not a phrase, append the word to the result
+      return result.push(word.value);
+    }
+
+    // if started checking phrase, append the word to the last element of the result
+    if (isCheckingPhrase) {
+      result[result.length - 1] += ` ${word.value}`;
+
+      if (word.phraseId) {
+        // last word of the phrase
+        isCheckingPhrase = false;
+      }
+
+      return;
+    }
+
+    // first word of the phrase
+    if (word.phraseId) {
+      isCheckingPhrase = true;
+      return result.push(word.value);
+    }
+  });
+
+  return result;
+};
 
 export default function Home() {
-  const [sentence, setSentence] = useState<Sentence>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [state, dispatch] = useSetWordState();
+
+  const sentence = state.sentence;
+  const isPhraseSelectionMode = sentence.some(
+    (word) => word.isOpenForPhraseSelectionMode,
+  );
 
   const { createWord, createWordsCount, resetCreatedWordsCount } =
     useSubmitWords();
 
-  const selectedWords = sentence
-    .filter((word) => word.selected)
-    .map((word) => word.value);
+  const selectedWords = chunkWordsWithPhraseId(sentence);
 
   const isSubmitDisabled = selectedWords.length === 0;
 
-  const handleChangeSentence = (value: string) => {
-    const words = parseStringToSentence(value);
+  const handleChangeSentence = useCallback(
+    (value: string) => {
+      const words = parseStringToSentence(value);
 
-    setSentence(words);
-  };
+      dispatch({ type: 'SET_SENTENCE', sentence: words });
+    },
+    [dispatch],
+  );
 
-  const handleSelectWord = (id: string) => {
-    setSentence((prev) =>
-      prev.map((word) =>
-        word.id === id ? { ...word, selected: !word.selected } : word,
-      ),
-    );
+  const handleSelectWord = (selectedWord: Sentence[number]) => {
+    // if already selected, enter phrase selection mode
+
+    if (isPhraseSelectionMode) {
+      // if tapped on the same word
+      if (selectedWord.isOpenForPhraseSelectionMode) {
+        return dispatch({
+          type: 'MARK_WORD_AS_DEFAULT_STATE',
+          wordId: selectedWord.id,
+        });
+      }
+
+      // if tapped on a different word
+      return dispatch({
+        type: 'SET_PHRASE',
+        word1: selectedWord,
+        word2: sentence.find((word) => word.isOpenForPhraseSelectionMode)!, // TODO: Fix this non-null assertion
+      });
+    }
+
+    if (selectedWord.selected) {
+      return dispatch({
+        type: 'MARK_WORD_AS_OPEN_FOR_PHRASE_SELECTION',
+        wordId: selectedWord.id,
+      });
+    }
+
+    return dispatch({ type: 'MARK_WORD_AS_SELECTED', wordId: selectedWord.id });
+
+    // const wordOpenForSelection = sentence.find(
+    //   (word) => word.isOpenForPhraseSelectionMode,
+    // );
+    // if (isPhraseSelectionMode) {
+    //   if (!wordOpenForSelection) {
+    //     return;
+    //   }
+
+    //   const phraseId = new Date().getTime().toString(); // TODO: implement more reliable id generation
+
+    //   // select all words between the selected word and the word that is open for phrase selection (inclusive), and assign the same phraseId
+    //   const selectedWordIndex = sentence.findIndex(
+    //     (word) => word.id === selectedWord.id,
+    //   );
+
+    //   const wordOpenForSelectionIndex = sentence.findIndex(
+    //     (word) => word.id === wordOpenForSelection.id,
+    //   );
+
+    //   const startIndex = Math.min(selectedWordIndex, wordOpenForSelectionIndex);
+    //   const endIndex = Math.max(selectedWordIndex, wordOpenForSelectionIndex);
+
+    //   setSentence((prev) =>
+    //     prev.map((word, index) =>
+    //       index >= startIndex && index <= endIndex
+    //         ? { ...word, selected: true, phraseId }
+    //         : word,
+    //     ),
+    //   );
+
+    //   // reset phrase selection mode
+    //   setSentence((prev) =>
+    //     prev.map((word) =>
+    //       word.isOpenForPhraseSelectionMode
+    //         ? { ...word, isOpenForPhraseSelectionMode: false }
+    //         : word,
+    //     ),
+    //   );
+
+    //   return;
+    // }
   };
 
   const handleSubmit = () => {
@@ -53,7 +157,7 @@ export default function Home() {
     )
       .then(() => {
         resetCreatedWordsCount();
-        setSentence([]);
+        dispatch({ type: 'RESET_SENTENCE' });
       })
       .catch(() => {
         alert('Failed to create word');
@@ -83,7 +187,7 @@ export default function Home() {
     return () => {
       window.removeEventListener('focus', pasteFromCilpboard);
     };
-  }, []);
+  }, [handleChangeSentence]);
 
   return (
     <main className="flex flex-col">
