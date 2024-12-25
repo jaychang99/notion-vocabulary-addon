@@ -98,13 +98,12 @@ export default function Home() {
       >
         {isSubmitDisabled ? 'Select words to submit' : 'Submit'}
       </Button>
-      {/* {createWordsCount > 0 && (
+      {createWordsCount > 0 && (
         <ProgressBar
           totalCount={selectedWords.length}
           completedCount={createWordsCount}
         />
-      )} */}
-      <ProgressBar totalCount={5} completedCount={3} />
+      )}
       <div className="h-20" />
     </main>
   );
