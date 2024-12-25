@@ -6,7 +6,7 @@ const SelectedWordViewer = ({ words }: Props) => {
   return (
     <div>
       <h2 className="text-xl font-bold">Selected Words</h2>
-      <ul className="flex flex-wrap flex-col">
+      <ul className="flex flex-wrap">
         {words.map((word, index) => (
           <li
             key={index}
