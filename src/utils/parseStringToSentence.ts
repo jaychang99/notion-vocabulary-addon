@@ -7,6 +7,7 @@ export const parseStringToSentence = (value: string): Sentence => {
   // );
 
   const parseValue = pipe(
+    removeAmazonKindleSourceText,
     removeApplePodcastSourceText,
     truncateTrailingNewline,
     removePunctuation,
@@ -41,4 +42,10 @@ const removeApplePodcastSourceText = (value: string) => {
     /From[\s\S]*?This material may be protected by copyright\.\s*/,
     '',
   );
+};
+
+const removeAmazonKindleSourceText = (value: string) => {
+  // remove from `—   : ` to the end of the string
+
+  return value.replace(/— .*?: .*$/, '');
 };
