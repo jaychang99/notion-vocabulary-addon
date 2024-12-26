@@ -30,7 +30,8 @@ const pipe =
     fns.reduce((acc, fn) => fn(acc), value);
 
 const removePunctuation = (value: string) =>
-  value.replace(/[.,\/#!$%\^&\*;:='"\`~]/g, '');
+  // remove all punctuation except for hyphen
+  value.replace(/[.,\/#!$%^&*;:=_'"`~()\[\]{}<>“”‘’—–…]/g, '');
 
 const truncateTrailingNewline = (value: string) => value.replace(/\n$/, '');
 
