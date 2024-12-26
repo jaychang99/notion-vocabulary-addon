@@ -11,6 +11,7 @@ import { useSetWordState } from '@/hooks/useSetWordState';
 import { useSubmitWords } from '@/hooks/useSubmitWords';
 import { Sentence } from '@/types/sentence';
 import { parseStringToSentence } from '@/utils/parseStringToSentence';
+import { removePartsOfInput } from '@/utils/removePartsOfInput';
 import { useCallback, useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -65,9 +66,14 @@ export default function Home() {
 
   const handleChangeSentence = useCallback(
     (value: string) => {
-      const words = parseStringToSentence(value);
+      const sentenceWithoutUnnecessaryParts = removePartsOfInput(value);
+      const words = parseStringToSentence(sentenceWithoutUnnecessaryParts);
 
-      dispatch({ type: 'SET_SENTENCE', sentence: words, rawSentence: value });
+      dispatch({
+        type: 'SET_SENTENCE',
+        sentence: words,
+        rawSentence: sentenceWithoutUnnecessaryParts,
+      });
     },
     [dispatch],
   );
