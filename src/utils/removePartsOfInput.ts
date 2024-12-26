@@ -2,6 +2,7 @@ export const removePartsOfInput = (value: string): string => {
   const parseValue = pipe(
     removeAmazonKindleSourceText,
     removeApplePodcastSourceText,
+    truncateTrailingNewlines,
   );
 
   const parsedValue = parseValue(value);
@@ -31,3 +32,5 @@ const removeAmazonKindleSourceText = (value: string) => {
 
   return value.replace(/— .*?: .*$/, '');
 };
+
+const truncateTrailingNewlines = (value: string) => value.trim();
