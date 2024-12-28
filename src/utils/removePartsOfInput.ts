@@ -28,8 +28,7 @@ const removeApplePodcastSourceText = (value: string) => {
 };
 
 const removeAmazonKindleSourceText = (value: string) => {
-  // remove from `—   : ` to the end of the string
-
+  // remove  `— {something}: `
   return value.replace(/— .*?: .*$/, '');
 };
 
