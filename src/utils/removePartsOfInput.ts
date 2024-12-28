@@ -28,8 +28,9 @@ const removeApplePodcastSourceText = (value: string) => {
 };
 
 const removeAmazonKindleSourceText = (value: string) => {
-  // remove  `— {something}: `
-  return value.replace(/— .*?: .*$/, '');
+  // remove  `— {something} https://a.co${something}`
+
+  return value.replace(/—[\s\S]*?a\.co[\s\S]*?$/, '');
 };
 
 const truncateTrailingNewlines = (value: string) => value.trim();
