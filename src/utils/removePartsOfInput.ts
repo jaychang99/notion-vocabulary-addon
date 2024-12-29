@@ -30,6 +30,11 @@ const removeApplePodcastSourceText = (value: string) => {
 const removeAmazonKindleSourceText = (value: string) => {
   // remove  `— {something} https://a.co${something}`
 
+  // if value contains 'Kindle Edition' remove the whole line containing 'Kindle Edition'
+  if (value.includes('Kindle Edition')) {
+    return value.replace(/.*Kindle Edition./, '');
+  }
+
   return value.replace(/—[\s\S]*?a\.co[\s\S]*?$/, '');
 };
 
