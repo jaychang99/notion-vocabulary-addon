@@ -7,6 +7,7 @@ import SelectedWordViewer from '@/components/SelectedWordViewer';
 import Spin from '@/components/Spin';
 import Textarea from '@/components/Textarea';
 import WordSelector from '@/components/WordSelector';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useSetWordState } from '@/hooks/useSetWordState';
 import { useSubmitWords } from '@/hooks/useSubmitWords';
 import { Sentence } from '@/types/sentence';
@@ -56,6 +57,8 @@ export default function Home() {
   const isPhraseSelectionMode = sentence.some(
     (word) => word.isOpenForPhraseSelectionMode,
   );
+
+  const isMobile = useIsMobile();
 
   const { createWord, createWordsCount, resetCreatedWordsCount } =
     useSubmitWords();
@@ -196,7 +199,7 @@ export default function Home() {
   }, [handleChangeSentence]);
 
   return (
-    <main className="flex flex-col">
+    <main className="flex flex-col max-w-[500px] mx-auto">
       <Toaster />
       {/* <div className="h-5" /> */}
       {/* <h1 className="text-4xl font-bold text-center">Register Words</h1> */}
@@ -240,7 +243,9 @@ export default function Home() {
         onClick={handleSubmit}
         disabled={isSubmitDisabled || isLoading}
         className={`
-          fixed bottom-4 left-0 right-0 font-bold text-xl p-4
+          bottom-4 left-0 right-0 font-bold text-xl p-4
+          max-w-[500px] mx-auto 
+            ${isMobile ? 'fixed' : 'w-[500px]'}
           `}
       >
         {isLoading ? (
