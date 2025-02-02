@@ -1,7 +1,7 @@
 import { Sentence } from '@/types/sentence';
 
 export const parseStringToSentence = (value: string): Sentence => {
-  const parseValue = pipe(removePunctuation);
+  const parseValue = pipe(removePunctuation, replaceNewlineCharactersWithSpace);
 
   const parsedValue = parseValue(value);
 
@@ -22,3 +22,6 @@ const pipe =
 const removePunctuation = (value: string) =>
   // remove all punctuation except for hyphen
   value.replace(/[.,\/#!$%^&*;:=_'"`~()\[\]{}<>“”‘’—–…]/g, '');
+
+const replaceNewlineCharactersWithSpace = (value: string) =>
+  value.replace(/\n/g, ' ');
